@@ -69,14 +69,14 @@ Km_miuM=[[0.000392333154234199*1000000];#ATP_6345
 Km=Km_miuM*conv; #Km(miumol/gDW)
 
 #default_bounds_array
-#for fluxes
+#for fluxes(v)
 default_bounds_array=[[0 k_cat[1]*E*theta*(con_metabolite_gDW[1]/(con_metabolite_gDW[1]+Km[1]))*(con_metabolite_gDW[7]/(con_metabolite_gDW[7]+Km[2]))];
 [0 k_cat[2]*E*theta*1];
 [0 k_cat[3]*E*theta*(con_metabolite_gDW[12]/(con_metabolite_gDW[12]+Km[4]))];
 [0 k_cat[4]*E*theta*(con_metabolite_gDW[13]/(con_metabolite_gDW[13]+Km[6]))];
 [0 k_cat[5]*E*theta*(con_metabolite_gDW[12]/(con_metabolite_gDW[12]+Km[7]))*(con_metabolite_gDW[14]/(con_metabolite_gDW[14]+Km[8]))];
 [0 k_cat[6]*E*theta*(con_metabolite_gDW[18]/(con_metabolite_gDW[18]+Km[10]))];
-#for bs
+#for b
 [0 10*1000/3600];
 [0 10*1000/3600];
 [0 10*1000/3600];
@@ -96,11 +96,10 @@ default_bounds_array=[[0 k_cat[1]*E*theta*(con_metabolite_gDW[1]/(con_metabolite
 species_bounds_array=zeros(Float64,18,2);
 
 #objective_coefficient_array
-objective_coefficient_array=[0;0;0;0;0;0;0;0;0;-1;0;0;0;0;0;0;0;0;0;0];
+objective_coefficient_array=zeros(Float64,20);
+objective_coefficient_array[10]=-1;
 
-min_flag = true;
 
-ans=calculate_optimal_flux_distribution(stoichiometric_matrix,default_bounds_array,species_bounds_array,objective_coefficient_array,min_flag);
-vec=ans[2]*3600;
-flux_urea=vec[10];
-println(flux_urea)
+flux=calculate_optimal_flux_distribution(stoichiometric_matrix,default_bounds_array,species_bounds_array,objective_coefficient_array);
+ans=flux[2]*3600;
+max_flux_urea=ans[10];
